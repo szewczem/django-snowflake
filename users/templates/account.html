@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User Account
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <p class="header">Reservation List</p>
+    <ul class="list-group list-group-flush">
+        {% for reservation in user_reservations %}
+        <li class="list-group-item d-flex justify-content-between align-items-start con_user_reservation">
+            <div class="ms-2 me-auto">
+                <a class="nav-link user_reservation">
+                    {{ reservation.equipment }}: {{ reservation.start_date }} - {{ reservation.end_date }}
+                </a> 
+            </div>
+            <a class="nav-link" href="{% url 'users:delete_reservation' %}">
+                <button type="submit" class="btn btn-primary me-2" title="Delete reservation">Delete</button>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>                 
+</div>
+{% endblock content %}

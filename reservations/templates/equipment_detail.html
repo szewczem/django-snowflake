@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Equipment Detail
+{% endblock title %}
+
+{% block content %}
+    <div class="container rounded-3 detail-form-container">
+        <div class="container rounded-3 inner-detail-form-container">
+            <div class="container detail-header-container">
+                <p class="header header-detail">{{ equipment.name }}</p>
+                <div class="eq-header-cat">                
+                    <p>{{ equipment.category }}</p>
+                </div>
+            </div>    
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <img src="{{ equipment.banner.url }}" class="img-fluid rounded" alt="{{ equipment.name }}">
+                    </div>
+                    <div class="col d-flex flex-column">
+                        <div class="row">
+                            <p>Equipment details:</p>
+                            <p>Category: {{ equipment.category }}</p>
+                            <p>Level: {{ equipment.level }}</p>
+                            <p>Length: {{ equipment.length }} cm</p>
+                        </div>
+                        <div class="column-content mt-auto">
+                            {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'reservations:reserve' equipment.id %}">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <div class="form-group col-md-6">
+                                        <label for="startDate">Start date</label>
+                                        <input type="date" class="form-control" id="startDate" name="start_date">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endDate">End date</label>
+                                        <input type="date" class="form-control" id="endDate" name="end_date">
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="d-grid gap-2 col-12">
+                                        <button type="submit" class="btn btn-warning btn-block reserve-btn">Reserve</button>
+                                    </div> 
+                                </div>
+                            </form>
+                            {% else %}
+                            <form class="row g-3" method="POST" action=".">
+                                <div class="row g-3">
+                                    <div class="form-group col-md-2 col-lg-2">
+                                        <label for="startDate">Start date</label>
+                                        <input type="date" class="form-control" id="startDate" name="start_date" disabled>
+                                    </div>
+                                    <div class="form-group col-md-2 col-lg-2">
+                                        <label for="endDate">End date</label>
+                                        <input type="date" class="form-control" id="endDate" name="end_date"disabled>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="d-grid gap-2 col-4">
+                                        <button type="submit" class="btn btn-warning btn-block reserve-btn disabled">Reserve</button>
+                                    </div> 
+                                </div>       
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Filter List
+{% endblock title %}
+
+{% block content %}    
+    <form method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+
+    <section>
+        <p class="header">Filter List</p>
+        {% for equipment in equipment_list %}
+            <div>                
+                <a href="{% url 'reservations:equipment_detail' equipment.id %}">{{ equipment.type }} - {{ equipment.name }}</a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock content %}
+

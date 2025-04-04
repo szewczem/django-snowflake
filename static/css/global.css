@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marck+Script&display=swap');
+
+* {
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --darkGray: rgb(15,51,65);
+    --darkYellow: rgb(255,200,34);
+    --whiteColor: white;
+    --grayColor: #e0e0e0;    
+}
+
+body {
+    min-height: 100vh;
+    background-color: whitesmoke;
+    color: black;
+    font-size: 1.1rem;
+    line-height: 1.1rem;    
+    overflow-x: hidden;  
+}
+
