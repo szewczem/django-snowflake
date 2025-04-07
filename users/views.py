@@ -13,7 +13,7 @@ def register_view(request):
             return redirect("reservations:equipment_list")
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', { 'form': form })
+    return render(request, 'users/register.html', { 'form': form })
 
 def login_view(request):
     if request.method == "POST":
@@ -26,7 +26,7 @@ def login_view(request):
                 return redirect("reservations:equipment_list")
     else:
         form = AuthenticationForm(request.POST)
-    return render(request, 'login.html', { 'form': form })
+    return render(request, 'users/login.html', { 'form': form })
 
 def logout_view(request):
     if request.method == "POST":
@@ -35,7 +35,4 @@ def logout_view(request):
     
 def account_view(request):
     user_reservations = Reservation.objects.filter(user=request.user)
-    return render(request, 'account.html', { 'user_reservations': user_reservations})
-
-def delete_reservation(request):
-    pass
+    return render(request, 'users/account.html', { 'user_reservations': user_reservations})

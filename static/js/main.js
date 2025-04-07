@@ -1,22 +1,19 @@
-console.log('JS Loaded');
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+const appendAlert = (message, type) => {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
 
-function IndicateActive(){
-    // let navItem = document.querySelectorAll('.nav-item');
-    // console.log(navItem);
+  alertPlaceholder.append(wrapper)
+}
 
-    document.querySelectorAll('.nav-item').forEach(navItem => {
-        navItem.addEventListener('click', (e) => {
-            let navItem = e.currentTarget.childNodes[1]; 
-            console.log(navItem)
-            navItem.classList.toggle('active')
-        })
-    })
-    // navItem.addEventListener("click", (e) => {
-    //     if (navItem.classList.contains('active')){
-    //         navItem.classList.remove('active');        
-    //     } else {
-    //         navItem.classList.toggle('active')
-    //     };
-    // });
-};
-IndicateActive()
+const alertTrigger = document.getElementById('liveAlertBtn')
+if (alertTrigger) {
+  alertTrigger.addEventListener('click', () => {
+    appendAlert('Reservation for {self.object.equipment.name} has been successfully deleted.', 'success')
+  })
+}
