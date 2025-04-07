@@ -124,8 +124,9 @@ a:hover {
 }
 
 /* pagination */
-.pagination {
-  margin-top: 1rem;
+.paginator-container {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
 
@@ -163,6 +164,10 @@ a:hover {
   margin-top: .5rem;
 }
 
+.alert-container {
+  margin-top: 2rem;
+}
+
 
 /***** user_account *****/
 .user_reservation {
@@ -172,6 +177,10 @@ a:hover {
 .con_user_reservation {
   display: flex !important;
   align-items: center !important;
+}
+
+.account-container {
+  margin-bottom: 3rem;
 }
 
 
