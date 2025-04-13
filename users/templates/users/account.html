@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User Account
+{% endblock title %}
+
+{% block content %}
+<div class="container account-container">
+    <p class="header">Reservation List</p>
+    
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-primary" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+    {% endif %}
+
+    <ul class="list-group list-group-flush">
+        {% for reservation in user_reservations %}
+            <li class="list-group-item d-flex justify-content-between align-items-start con_user_reservation">
+                <div class="ms-2 me-auto">
+                    <a class="nav-link user_reservation">
+                        {{ reservation.equipment }}: {{ reservation.start_date|date:"D d.m.Y" }} - {{ reservation.end_date|date:"D d.m.Y" }}
+                    </a> 
+                </div>               
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Cancel reservation
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cancel reservation</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div>{{ reservation.equipment}}</div>
+                                <div>{{ reservation.start_date }} - {{ reservation.end_date }}</div>
+                                <div>Are you sure you want to cancel your reservation</div>                        
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                                <form class="form-with-validation" action="{% url 'reservations:reservation_delete' reservation.pk %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary" id="liveAlertBtn">Confirm</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>                   
+            </li>
+        {% endfor %}
+    </ul>                 
+</div>
+{% endblock content %}

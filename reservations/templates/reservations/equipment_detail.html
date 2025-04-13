@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Equipment Detail
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-container" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="container rounded-3 detail-container">
+        <div class="container rounded-3 inner-detail-form-container">
+            <div class="container detail-header-container">
+                <p class="header header-detail">{{ equipment.name }}</p>
+                <div class="eq-header-cat">                
+                    <p>{{ equipment.category }}</p>
+                </div>
+            </div>    
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 text-center">
+                        <img src="{{ equipment.banner.url }}" class="img-fluid rounded" alt="{{ equipment.name }}">
+                    </div>
+                    <div class="col d-flex flex-column">
+                        <div class="row">
+                            <p>Equipment details:</p>
+                            <p>Category: {{ equipment.category }}</p>
+                            <p>Level: {{ equipment.level }}</p>
+                            <p>Length: {{ equipment.length }} cm</p>
+                        </div>
+                        <div class="column-content mt-auto">
+                            {% if user.is_authenticated %}
+                            <form method="POST" class="detail-form-container">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    {% comment %} <div class="col-12 flex-nowrap">
+                                        <input class="form-control py-2 border-right-0 border" type="text" id='phoneNumber' name='reservation_phone_number' placeholder="Phone number" required>
+                                        {% if form.reservation_phone_number.errors %}
+                                          <div class="invalid-feedback d-block">
+                                            {{ form.reservation_phone_number.errors.0 }}
+                                          </div>
+                                        {% endif %}
+                                    </div> {% endcomment %}
+                                    <div class="form-group col-md-6">
+                                        <label for="startDate">Start date</label>
+                                        <input type="date" class="form-control" id="detail-start-date" name="start_date" value="{{ start_date }}" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endDate">End date</label>
+                                        <input type="date" class="form-control" id="detail-end-date" name="end_date" value="{{ end_date }}" required>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    {% comment %} <div class="d-grid gap-2 col-12">
+                                        <button type="submit" class="btn btn-warning btn-block reserve-btn">Reserve</button>
+                                    </div> {% endcomment %}
+                                    <!-- Button trigger modal -->
+                                    <div class="d-grid gap-2 col-12">
+                                        <button type="button" class="btn btn-warning btn-block reserve-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            Reserve
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="." class="detail-form-container">
+                                <div class="row g-3">
+                                    <div class="form-group col-md-6">
+                                        <label for="startDate">Start date</label>
+                                        <input type="date" class="form-control" id="detail-start-date" name="start_date" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endDate">End date</label>
+                                        <input type="date" class="form-control" id="detail-end-date" name="end_date" disabled>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="d-grid gap-2 col-12" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Login to make reservation">
+                                        <button type="button" class="btn btn-warning btn-block reserve-btn disabled">Reserve</button>
+                                    </div>
+                                </div>      
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content detail-form-container">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Equipment Reservation Form</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {% if user.is_authenticated %}
+            <form method="POST" id="reservationForm">
+                {% csrf_token %}
+                <div class="modal-body reservation-form-body">
+                    <div class="row reservation-form-detail">
+                        <div class="reservation-form-header">What's in Your Snowbag</div>
+                        <p>Equipment name: {{ equipment.name }}</p>
+                        <p>Category: {{ equipment.category }}</p>
+                        <p>Level: {{ equipment.level|title }}</p>
+                        <p>Length: {{ equipment.length }} cm</p>
+                    </div>  
+                    <hr/>                
+                    <div class="row g-3">
+                        <fieldset disabled>
+                            <div class="col-12 flex-nowrap">
+                                <input class="form-control py-2 border-right-0 border" type="search" name="equipment_name" list="datalistOptions" placeholder="Name" value="{{ username }}"/>
+                            </div>
+                        </fieldset>
+                        <div class="col-12 flex-nowrap">
+                            <input class="form-control py-2 border-right-0 border" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id='phoneNumber' name='reservation_phone_number' placeholder="Phone number" 
+                            value={% with phone_number.as_e164 as full_number %}
+                                {{ full_number|slice:"3:" }}
+                            {% endwith %} required>
+                            <div id="phone-feedback" class="invalid-feedback d-none">
+                                Invalid phone number
+                            </div>
+                            {% comment %} {% if form.reservation_phone_number.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.reservation_phone_number.errors.0 }}
+                                </div>
+                            {% endif %} {% endcomment %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="startDate">Start date</label>
+                            <input type="date" class="form-control" id="reservation-start-date" name="start_date" value="{{ start_date }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="endDate">End date</label>
+                            <input type="date" class="form-control" id="reservation-end-date" name="end_date" value="{{ end_date }}">
+                        </div>
+                    </div>                        
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>                    
+                    <button type="submit" class="btn btn-primary" id="ReserveBtn">Reserve</button>                                       
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
