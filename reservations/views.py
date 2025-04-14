@@ -111,7 +111,7 @@ class EquipmentListView(ListView):
         })
         return context
     
-    # keeping dates in session, equipment_detail reservation form
+    # keeping dates in session, for equipment_detail reservation form
     def get(self, request, *args, **kwargs):
         start_date_form = self.request.GET.get('start_date')
         end_date_form = self.request.GET.get('end_date')
@@ -136,12 +136,19 @@ class EquipmentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        context.update({
+            'form': kwargs.get('form', ReservationForm()),
+            'start_date': self.request.session.get('start_date'),
+            'end_date': self.request.session.get('end_date'),
+            'username': self.request.user.username,
+            'phone_number': self.request.user.phone_number,
+        })
         # context['form'] = ReservationForm()        
-        context['form'] = kwargs.get('form', ReservationForm())
-        context['start_date'] = self.request.session.get('start_date')
-        context['end_date'] = self.request.session.get('end_date')
-        context['username'] = self.request.user.username
-        context['phone_number'] = self.request.user.phone_number
+        # context['form'] = kwargs.get('form', ReservationForm())
+        # context['start_date'] = self.request.session.get('start_date')
+        # context['end_date'] = self.request.session.get('end_date')
+        # context['username'] = self.request.user.username
+        # context['phone_number'] = self.request.user.phone_number
 
         return context
     

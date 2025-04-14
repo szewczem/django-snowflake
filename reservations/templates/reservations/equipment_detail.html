@@ -122,10 +122,11 @@
                             </div>
                         </fieldset>
                         <div class="col-12 flex-nowrap">
-                            <input class="form-control py-2 border-right-0 border" type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" id='phoneNumber' name='reservation_phone_number' placeholder="Phone number" 
+                            <input class="form-control py-2 border-right-0 border" type="text" id='phoneNumber' name='reservation_phone_number' placeholder="Phone number" 
                             value={% with phone_number.as_e164 as full_number %}
                                 {{ full_number|slice:"3:" }}
-                            {% endwith %} required>
+                            {% endwith %} 
+                            required>
                             <div id="phone-feedback" class="invalid-feedback d-none">
                                 Invalid phone number
                             </div>
@@ -147,7 +148,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>                    
-                    <button type="submit" class="btn btn-primary" id="ReserveBtn">Reserve</button>                                       
+                    <button type="submit" class="btn btn-primary" id="reserveBtn">Reserve</button>                                       
                 </div>
             </form>
             {% endif %}
