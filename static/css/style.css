@@ -25,6 +25,10 @@
   color: rgba(255, 193, 7);
 }
 
+main {
+  margin-bottom: 2.5rem;
+}
+
 a {
   text-decoration: none;
   color: #000;
@@ -44,7 +48,6 @@ a:hover {
 .footer-container {
   background-color: rgba(33, 37, 41, 0.9);
   color: white;
-  margin-top: 2.5rem !important;
 }
 
 .inner-footer-container {
