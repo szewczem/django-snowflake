@@ -19,7 +19,7 @@ if (alertTrigger) {
   })
 }
 
-
+// getting dates from equipment_detail to modal
 const modal = document.getElementById('exampleModal');
 
 modal.addEventListener('show.bs.modal', function () {
@@ -31,31 +31,67 @@ modal.addEventListener('show.bs.modal', function () {
 });
 
 
-// Checking phone number input in reservation form (equipment_detail)
+/// phone number validation, only digits ///
 document.addEventListener("DOMContentLoaded", function () {
   const phoneInput = document.getElementById("phoneNumber");
   const feedback = document.getElementById("phone-feedback");
-  const reserveBtn = document.getElementById("ReserveBtn");
+  const reserveBtn = document.getElementById("reserveBtn");
 
-  // regex for numbers
-  const phoneRegex = /^[0-9\s]{9}$/;
+  if (!phoneInput) return;
 
-  phoneInput.addEventListener("input", function () {
-      const isValid = phoneRegex.test(phoneInput.value);
+  const phoneRegex = /^[0-9]{9}$/;
 
-      if (phoneInput.value === "") {
-          phoneInput.classList.remove("is-valid", "is-invalid");
-          feedback.classList.add("d-none");
-      } else if (isValid) {
-          phoneInput.classList.add("is-valid");
-          phoneInput.classList.remove("is-invalid");
-          feedback.classList.add("d-none");
-          reserveBtn.classList.remove("disabled");
-      } else {
-          phoneInput.classList.add("is-invalid");
-          phoneInput.classList.remove("is-valid");
-          feedback.classList.remove("d-none");
-          reserveBtn.classList.add("disabled");
-      }
+  // Validate input during typing
+  function validatePhoneInput() {
+    const value = phoneInput.value;
+    const isValid = phoneRegex.test(value);
+
+    if (value === "") {
+      phoneInput.classList.remove("is-valid", "is-invalid");
+      feedback.classList.add("d-none");
+      reserveBtn.classList.add("disabled");
+    } else if (isValid) {
+      phoneInput.classList.add("is-valid");
+      phoneInput.classList.remove("is-invalid");
+      feedback.classList.add("d-none");
+      reserveBtn.classList.remove("disabled");
+    } else {
+      phoneInput.classList.add("is-invalid");
+      phoneInput.classList.remove("is-valid");
+      feedback.classList.remove("d-none");
+      reserveBtn.classList.add("disabled");
+    }
+  }
+
+  // Allow only digits during typing
+  phoneInput.addEventListener("keypress", function (event) {
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
   });
+
+  // Clean pasted content and insert digits only
+  phoneInput.addEventListener("paste", function (event) {
+    event.preventDefault();
+    const paste = event.clipboardData.getData("text");
+    const digitsOnly = paste.replace(/\D/g, "");
+
+    const currentValue = phoneInput.value;
+    const selectionStart = phoneInput.selectionStart;
+    const selectionEnd = phoneInput.selectionEnd;
+
+    // Insert cleaned digits
+    phoneInput.value =
+      currentValue.slice(0, selectionStart) + digitsOnly + currentValue.slice(selectionEnd);
+
+    // Move cursor after pasted content
+    const newCursorPos = selectionStart + digitsOnly.length;
+    setTimeout(() => {
+      phoneInput.setSelectionRange(newCursorPos, newCursorPos);
+      validatePhoneInput(); // Trigger validation after paste
+    }, 0);
+  });
+
+  // Re-validate after change in input
+  phoneInput.addEventListener("input", validatePhoneInput);
 });
