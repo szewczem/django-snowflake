@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-    <section>
+    {% comment %} <section>
         <p>User Login</p>
         <form class="form-with-validation" action="{% url 'users:login' %}" method="post">
             {% csrf_token %}
@@ -15,5 +15,10 @@
             {% endif %}
             <button class="form-submit">Login</button>
         </form>
-    </section>
+    </section> {% endcomment %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
 {% endblock content %}

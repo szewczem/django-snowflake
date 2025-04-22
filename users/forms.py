@@ -8,7 +8,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "phone_number",)
+        fields = ("username", "email", "phone_number", "password1", "password2",)
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -19,9 +19,8 @@ class CustomUserChangeForm(UserChangeForm):
 
 
 class CustomAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(max_length=150)
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    username = forms.CharField(label="Email",)
 
     class Meta:
         model = CustomUser
-        fields = ("username", "password")
+        fields = ("email", "password")

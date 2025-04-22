@@ -41,12 +41,13 @@
                             <div class="modal-body">
                                 <div>{{ reservation.equipment}}</div>
                                 <div>{{ reservation.start_date }} - {{ reservation.end_date }}</div>
-                                <div>Are you sure you want to cancel your reservation</div>                        
+                                <div>Are you sure you want to cancel your reservation?</div>                        
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
                                 <form class="form-with-validation" action="{% url 'reservations:reservation_delete' reservation.pk %}" method="POST">
                                     {% csrf_token %}
+                                    {{ form }}
                                     <button type="submit" class="btn btn-primary" id="liveAlertBtn">Confirm</button>
                                 </form>
                             </div>

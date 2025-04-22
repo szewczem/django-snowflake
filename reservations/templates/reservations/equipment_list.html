@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}    
-<div class="container">
+<div class="container main-container">
     <div class="container rounded-3 form-container">
         <form class="row g-3" method="GET" action=".">
             <div class="col-12 input-group flex-nowrap">
@@ -90,7 +90,7 @@
                         <h5 class="card-title">{{ equipment.name }}</h5>
                         <p class="card-equipment-category">{{ equipment.category }}</p>
                         <hr class="card-hr" />
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text text-multiline">{{ equipment.description }}</p>
                         </div>
                     </div>
                 </a>

@@ -4,7 +4,7 @@ from .models import Equipment, Reservation, Category
 # Register your models here.
 
 class EquipmentAdmin(admin.ModelAdmin):
-    fields = ['id', 'category', 'name', 'length', 'level', 'banner']
+    fields = ['id', 'category', 'name', 'length', 'level', 'banner', 'description',]
     list_display = ['id', 'category', 'name', 'length', 'level', 'banner']
     readonly_fields = ['id']
     search_fields = ('name',)
