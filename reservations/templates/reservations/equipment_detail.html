@@ -29,10 +29,11 @@
                     </div>
                     <div class="col d-flex flex-column">
                         <div class="row">
-                            <p>Equipment details:</p>
-                            <p>Category: {{ equipment.category }}</p>
-                            <p>Level: {{ equipment.level }}</p>
+                            <p class='card-details-title'>Equipment details</p>
+                            <p>Category: {{ equipment.category|title }}</p>
+                            <p>Level: {{ equipment.level|title }}</p>
                             <p>Length: {{ equipment.length }} cm</p>
+                            <p class='eq-detail-description'>{{ equipment.description }}</p>
                         </div>
                         <div class="column-content mt-auto">
                             {% if user.is_authenticated %}
@@ -73,16 +74,16 @@
                                 <div class="row g-3">
                                     <div class="form-group col-md-6">
                                         <label for="startDate">Start date</label>
-                                        <input type="date" class="form-control" id="detail-start-date" name="start_date" disabled>
+                                        <input type="date" class="form-control" id="detail-start-date" name="start_date" value="{{ start_date }}" disabled>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="endDate">End date</label>
-                                        <input type="date" class="form-control" id="detail-end-date" name="end_date" disabled>
+                                        <input type="date" class="form-control" id="detail-end-date" name="end_date" value="{{ end_date }}" disabled>
                                     </div>
                                 </div>
                                 <div class="row g-3">
                                     <div class="d-grid gap-2 col-12" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Login to make reservation">
-                                        <button type="button" class="btn btn-warning btn-block reserve-btn disabled">Reserve</button>
+                                        <button type="button" class="btn btn-warning btn-block reserve-btn" disabled>Reserve</button>
                                     </div>
                                 </div>      
                             </form>
@@ -123,18 +124,18 @@
                         </fieldset>
                         <div class="col-12 flex-nowrap">
                             <input class="form-control py-2 border-right-0 border" type="text" id='phoneNumber' name='reservation_phone_number' placeholder="Phone number" 
-                            value={% with phone_number.as_e164 as full_number %}
-                                {{ full_number|slice:"3:" }}
-                            {% endwith %} 
+                            value=
+                            {% if phone_number %}
+                                {% with phone_number.as_e164 as full_number %}
+                                    {{ full_number|slice:"3:" }}
+                                {% endwith %}
+                            {% else %} 
+                                {{"123456789"}} 
+                            {% endif %}
                             required>
                             <div id="phone-feedback" class="invalid-feedback d-none">
                                 Invalid phone number
                             </div>
-                            {% comment %} {% if form.reservation_phone_number.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.reservation_phone_number.errors.0 }}
-                                </div>
-                            {% endif %} {% endcomment %}
                         </div>
                         <div class="form-group col-md-6">
                             <label for="startDate">Start date</label>

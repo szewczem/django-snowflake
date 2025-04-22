@@ -32,7 +32,8 @@ class Equipment(models.Model):
     name = models.CharField(max_length=32)
     length = models.CharField(max_length=3, null=True)
     level = models.CharField(max_length=20, null=True)
-    banner = models.ImageField(default="Equipment_photo/test.jpg", blank=True)
+    banner = models.ImageField(default="equipment_photo/test.jpg", blank=True)
+    description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

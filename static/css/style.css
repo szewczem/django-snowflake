@@ -117,9 +117,13 @@ a:hover {
 }
 
 /****** equipment_list ******/
+.main-container {
+  max-width: 96rem;
+}
+
 /* form */
 .form-container {    
-  max-width: 62rem;
+  max-width: 68rem;
   margin-top: 3rem;
   padding: 2rem;  
   background-color: rgba(30,102,130,0.1);
@@ -152,6 +156,18 @@ a:hover {
   margin: .4rem .2rem .8rem .2rem;
 }
 
+.card-text {
+  /* text-align: justify; */
+  text-justify: inter-word;
+  overflow: hidden;
+  display: -webkit-box;
+  display: box; 
+  -webkit-line-clamp: 3;
+  line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  box-orient: vertical; 
+}
+
 /* pagination */
 .paginator-container {
   margin-top: 2rem;
@@ -173,10 +189,6 @@ a:hover {
   margin: 0 1rem;
 }
 
-.header-detail {
-  padding: 0;
-  margin-bottom: .8rem;
-}
 
 .inner-detail-form-container { 
   max-width: 90rem;
@@ -184,13 +196,27 @@ a:hover {
   padding: 2rem;  
 }
 
+.header-detail {
+  padding: 0;
+  margin-bottom: 0;
+}
+
 .eq-header-cat {
   color: darkgray;
   font-size: 1rem;
 }
 
+.eq-detail-description {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 .detail-form-container {
   font-size: .9rem;
+}
+
+.card-details-title {
+  font-size: 1.1rem;
 }
 
 .reserve-btn {
@@ -217,7 +243,6 @@ a:hover {
   margin-bottom: .5rem;
   font-size: 1rem;
 }
-
 
 
 
@@ -287,3 +312,29 @@ a:hover {
 }
 
 
+/***** register *****/
+.login-layer {
+  z-index: 15;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  align-items: center;
+  background-color: whitesmoke;;
+}
+
+.login-layer-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login-layer-form {
+  max-width: 60rem;
+  padding: 2rem;  
+  background-color: rgba(30,102,130,0.1);
+  font-size: .9rem;
+}

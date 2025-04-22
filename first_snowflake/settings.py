@@ -86,8 +86,6 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = "users.CustomUser"
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -144,5 +142,13 @@ MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
 
+
+AUTH_USER_MODEL = "users.CustomUser"
+AUTHENTICATION_BACKENDS = ['users.backends.EmailBackend']
+
 PHONENUMBER_DEFAULT_FORMAT = "NATIONAL"
 PHONENUMBER_DEFAULT_REGION = "PL"
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "reservations:equipment_list"
+LOGOUT_REDIRECT_URL = "/"

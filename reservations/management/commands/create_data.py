@@ -4,7 +4,15 @@ from reservations.models import Category, Equipment
 
 categories = [
   'Ski',
+  'Ski',
+  'Ski',
+  'Ski',
+  'Ski',
+  'Ski',
   'Snowboard',
+  'Snowboard',
+  'Snowboard',
+  'Sled',
 ]
 
 length = [
@@ -12,17 +20,19 @@ length = [
     '145',
     '150',
     '165',
+    '170',
     '175',
+    '180',
 ]
 
 level = [
-    'begginer',
+    'beginner',
     'intermediate',
-    'expert',
+    'advanced',
 ]
 
 def generate_category():
-    index = random.randint(0,1)
+    index = random.randint(0,9)
     return categories[index]
 
 def generate_length():
@@ -33,6 +43,35 @@ def generate_level():
     index = random.randint(0,2)
     return level[index]
 
+def generate_banner(category_name):
+    if category_name=='Ski':
+        index = random.randint(0,61)
+        return f'equipment_photo/ski/{index}.jpg'
+    elif category_name=='Snowboard':
+        index = random.randint(0,41)
+        return f'equipment_photo/snowboard/{index}.jpg'
+    elif category_name=='Sled':
+        index = random.randint(0,7)
+        return f'equipment_photo/sled/{index}.jpg'
+    else:
+        return f'equipment_photo/test.jpg'
+    
+def generate_description(category_name):
+    if category_name=='Ski':
+        index = random.randint(0,26)
+        with open(f'media/equipment_description/ski/{index}.txt', 'r') as description_file:
+            return description_file.read()
+    elif category_name=='Snowboard':
+        index = random.randint(0,19)
+        with open(f'media/equipment_description/snowboard/{index}.txt', 'r') as description_file:
+            return description_file.read()
+    elif category_name=='Sled':
+        index = random.randint(0,9)
+        with open(f'media/equipment_description/sled/{index}.txt', 'r') as description_file:
+            return description_file.read()
+    else:
+        with open(f'media/equipment_description/test.txt', 'r') as description_file:
+            return description_file.read()
 
 class Command(BaseCommand):
 
@@ -47,6 +86,8 @@ class Command(BaseCommand):
                 category_name = generate_category()
                 length = generate_length()
                 level = generate_level()
+                banner = generate_banner(category_name)
+                description = generate_description(category_name)
 
                 category = Category.objects.get_or_create(name=category_name)
 
@@ -55,6 +96,8 @@ class Command(BaseCommand):
                     name=name,
                     length=length,
                     level=level,
+                    banner=banner,
+                    description=description,
                 )
                 equipment.save()     
 

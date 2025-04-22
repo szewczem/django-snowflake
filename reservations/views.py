@@ -136,12 +136,17 @@ class EquipmentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        def get_phone_number():
+            if self.request.user.is_authenticated:
+                return self.request.user.phone_number
+            return ''            
+
         context.update({
             'form': kwargs.get('form', ReservationForm()),
             'start_date': self.request.session.get('start_date'),
             'end_date': self.request.session.get('end_date'),
             'username': self.request.user.username,
-            'phone_number': self.request.user.phone_number,
+            'phone_number': get_phone_number(),
         })
         # context['form'] = ReservationForm()        
         # context['form'] = kwargs.get('form', ReservationForm())
