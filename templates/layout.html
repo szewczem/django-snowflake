@@ -36,11 +36,8 @@
             <div class="text-end">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                    <li class="nav-item nav-link">                    
-                        <form class="account" action="{% url 'users:account' %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-light me-2">Account</button>
-                        </form>
+                    <li class="nav-item nav-link">
+                        <a class="btn btn-outline-light me-2" href="{% url 'users:account' %}">Account</a>
                     </li>  
                     <li class="nav-item nav-link">                    
                         <form class="logout" action="{% url 'users:logout' %}" method="post">
