@@ -15,19 +15,7 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
     
 
-class Equipment(models.Model):
-    # LENGTH = {
-    #     '130': '130 cm',
-    #     '145': '145 cm',
-    #     '150': '150 cm',
-    #     '165': '165 cm',
-    #     '175': '175 cm',
-    # }
-    # LEVEL = {
-    #     'begginer': 'A',
-    #     'intermediate': 'B',
-    #     'expert': 'C',
-    # }    
+class Equipment(models.Model):   
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='category')
     name = models.CharField(max_length=32)
     length = models.CharField(max_length=3, null=True)
@@ -49,6 +37,11 @@ class Reservation(models.Model):
     reservation_phone_number = PhoneNumberField()
     start_date = models.DateField()
     end_date = models.DateField()
+    is_cancelled = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Reservation id: {self.id}, equipment: {self.equipment.category} - {self.equipment.name}'
+    
+    def cancel(self):
+        self.is_cancelled = True
+        self.save()

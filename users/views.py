@@ -28,16 +28,16 @@ class RegisterView(CreateView):
         return super().form_valid(form)
     
 
-# Create your views here.
-def register_view(request):
-    if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)          
-        if form.is_valid():
-            login(request, form.save())
-            return redirect("reservations:equipment_list")
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'users/register.html', { 'form': form })
+# # Create your views here.
+# def register_view(request):
+#     if request.method == "POST":
+#         form = CustomUserCreationForm(request.POST)          
+#         if form.is_valid():
+#             login(request, form.save())
+#             return redirect("reservations:equipment_list")
+#     else:
+#         form = CustomUserCreationForm()
+#     return render(request, 'users/register.html', { 'form': form })
 
 
 class CustomLoginView(LoginView):
@@ -45,40 +45,39 @@ class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
     redirect_authenticated_user = True
 
-def login_view(request):
-    if request.method == "POST":
-        form = CustomAuthenticationForm(data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            if 'next' in request.POST:
-                return redirect(request.POST.get('next'))
-            else:
-                return redirect("reservations:equipment_list")
-    else:
-        form = CustomAuthenticationForm(request.POST)
-    return render(request, 'users/login.html', { 'form': form })
+# def login_view(request):
+#     if request.method == "POST":
+#         form = CustomAuthenticationForm(data=request.POST)
+#         if form.is_valid():
+#             login(request, form.get_user())
+#             if 'next' in request.POST:
+#                 return redirect(request.POST.get('next'))
+#             else:
+#                 return redirect("reservations:equipment_list")
+#     else:
+#         form = CustomAuthenticationForm(request.POST)
+#     return render(request, 'users/login.html', { 'form': form })
 
 
 class CustomLogoutView(LogoutView):
     pass
 
-def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        return redirect("/")
+# def logout_view(request):
+#     if request.method == "POST":
+#         logout(request)
+#         return redirect("/")
     
 
-# class Account(LoginRequiredMixin, ListView):
-#     model = Reservation
-#     template_name = "users/account.html"
-#     context_object_name = 'user_reservations'
+class Account(LoginRequiredMixin, ListView):
+    model = Reservation
+    template_name = "users/account.html"
+    context_object_name = 'user_reservations'
 
-#     def get_queryset(self):
-#         qs = super().get_queryset()
-#         qs = qs.filter(user=self.request.user)
-#         return qs
-
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user=self.request.user)
+        return qs
     
-def account_view(request):
-    user_reservations = Reservation.objects.filter(user=request.user)
-    return render(request, 'users/account.html', { 'user_reservations': user_reservations})
+# def account_view(request):
+#     user_reservations = Reservation.objects.filter(user=request.user)
+#     return render(request, 'users/account.html', { 'user_reservations': user_reservations})
