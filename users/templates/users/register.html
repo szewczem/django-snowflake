@@ -1,56 +1,148 @@
 <!DOCTYPE html>
 {% load static %}
+{% load form_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% block title %}
-            Register a New User
+            Sign Up
         {% endblock %}
     </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
-    {% comment %} <section>
-        <p>Register a New User</p>
-        <form class="form-with-validation" action="{% url 'users:register' %}" method="post">
-            {% csrf_token %}
-            {{ form }}
-            <button class="form-submit">Submit</button>
+<body class="d-flex align-items-center py-4 bg-body-tertiary registration-body">
+    
+<div class="container-fluid">
+    <div class="row g-0">      
+      <!-- Left side: Banner Image -->
+      <div class="col-md-5 col-lg-5 p-0 banner">
+        {% comment %} <img src="{% static '../media/registration_banner.jpg' %}" alt="Registration banner"> {% endcomment %}
+      </div>
+
+      <!-- Right side: Registration Form -->
+      <div class="col-md-7 col-lg-7 d-flex justify-content-center align-items-center form-section">
+        <div class="register-form-container">
+          <form method="POST">
+            {% csrf_token %}       
+            <p class="login-title">Sign up</p>
+
+            <!-- Email -->
+            <div class="form-floating login-form-input mb-3">
+                {{ form.email|add_class:"form-control" }}
+                <label for="{{ form.email.id_for_label }}">Email address</label>
+                {% if form.email.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.email.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Name -->
+            <div class="form-floating login-form-input mb-3">
+                {{ form.username|add_class:"form-control" }}
+                <label for="{{ form.username.id_for_label }}">First name</label>
+                {% if form.username.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.username.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Phone number -->
+            <div class="form-floating login-form-input mb-3">
+                {{ form.phone_number|add_class:"form-control" }}
+                <label for="{{ form.phone_number.id_for_label }}">Phone number</label>
+                {% if form.phone_number.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.phone_number.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Password1 -->
+            <div class="form-floating login-form-input mb-3">
+                {{ form.password1|add_class:"form-control" }}
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {% if form.password1.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.password1.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Password2 -->
+            <div class="form-floating login-form-input mb-3">
+                {{ form.password2|add_class:"form-control" }}
+                <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+                {% if form.password2.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.password2.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" type="submit">Register</button>            
+            <p class="mt-3 mb-3 text-small">By creating an account, you agree to the Terms of Service. For more information about Snowflake's privacy practices, see the Snowflake Privacy Statement. We'll occasionally send you account-related emails.
+            </p>
+            <p class="mt-5 mb-3 text-body-secondary">Do you already have a Snowflake account? 
+                <a href="{% url 'users:login' %}">&#160; Log in &rarr;</a>
+            </p>
         </form>
-    </section> {% endcomment %}
-    <main class="form-signin w-100 m-auto login-layer">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
-        <div class="container rounded-3 login-form-container">
-            <form class="form-with-validation" method="POST">
-                {% csrf_token %}
-                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-            
-                <div class="form-floating">
-                  <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
-                  <label for="floatingInput"></label>
-                </div>
-                <div class="form-floating">
-                  <input type="password" class="form-control" id="floatingPassword" name="password1" placeholder="Password">
-                  <label for="floatingPassword"></label>
-                </div>
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="floatingPassword" name="password2" placeholder="Password confirmation">
-                    <label for="floatingPassword"></label>
-                </div>
-                <button class="btn btn-primary w-100 py-2" type="submit">Submit</button>
-                <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2025</p>
-            </form>
-        </div>        
-    </main>
+        </div>
+      </div>
+    </div>
+  </div>   
 
     <script src="{% static 'js/main.js' %}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
+
+
+
+
+
+{% comment %} <body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <main class="form-signin w-100 m-auto login-view">
+        <form class="login-form-container" method="POST">
+            {% csrf_token %}
+            <p class="login-title">Sign up</p>
+            <div class="form-floating login-form-input">
+                <input type="username" class="form-control" id="username" name="username" placeholder="Username">
+                <label for="username">First name</label>
+            </div>
+            <div class="form-floating login-form-input">
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                <label for="email">Email address</label>
+            </div>
+            <div class="form-floating login-form-input">
+                <input type="phone" class="form-control" id="phoneNumber" name="phone_number" placeholder="Phone number">
+                <label for="email">Phone number</label>
+            </div>
+            <div class="form-floating login-form-input">
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="Password">
+                <label for="password1">Password</label>
+            </div>        
+            <div class="form-floating login-form-input">
+                <input type="password" class="form-control" id="password2" name="password2" placeholder="Password">
+                <label for="password2">Confirm password</label>
+            </div>        
+            <div class="form-check text-start my-3">
+                <input class="form-check-input" type="checkbox" value="remember-me" id="checkDefault">
+                <label class="form-check-label" for="checkDefault">
+                    Remember me
+                </label>
+            </div>
+            <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
+            <p class="mt-5 mb-3 text-body-secondary">Have already a Snowflake account? 
+                <a href="{% url 'users:login' %}">Log in!</a>
+            </p>
+        </form>
+    </main>
+
+    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body> {% endcomment %}

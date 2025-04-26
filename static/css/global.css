@@ -19,7 +19,10 @@
     --darkGray: rgb(15,51,65);
     --darkYellow: rgb(255,200,34);
     --whiteColor: white;
-    --grayColor: #e0e0e0;    
+    --grayColor: #e0e0e0;
+    --halfwhite: #f8f9fa;   
+
+    --h6-size: .75rem;
 }
 
 body {

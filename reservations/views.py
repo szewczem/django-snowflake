@@ -35,11 +35,11 @@ class EquipmentListView(ListView):
         start_date_form = self.request.GET.get('start_date')
         end_date_form = self.request.GET.get('end_date')
         
-        if not self.is_valid_queryparam(end_date_form) and self.is_valid_queryparam(start_date_form): 
+        if start_date_form and not end_date_form: 
             end_date_form = start_date_form
-        elif not self.is_valid_queryparam(start_date_form) and self.is_valid_queryparam(end_date_form):
+        elif not start_date_form and end_date_form:
             start_date_form = dateformat.format(timezone.now().date(), 'Y-m-d')
-        elif self.is_valid_queryparam(start_date_form) and self.is_valid_queryparam(end_date_form) and start_date_form > end_date_form:    
+        elif start_date_form and end_date_form and start_date_form > end_date_form:    
             start_date_form, end_date_form = end_date_form, start_date_form
 
         return start_date_form, end_date_form
@@ -60,18 +60,18 @@ class EquipmentListView(ListView):
         ### dates ###
         if start_date_form or end_date_form:          
             start_date_form, end_date_form = self.is_valid_dates()
-            qs = qs.filter(Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form) | Q(reservation__start_date__gte=end_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__isnull=True)).distinct()
+            # qs = Equipment.is_reserved(start_date_form, end_date_form)
+
+            # qs = qs.filter(Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form) | Q(reservation__start_date__gte=end_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__isnull=True)).distinct()
             
-            # qs = qs.filter(~Q(reservation__start_date__lte=end_date_form, reservation__end_date__gte=end_date_form) & Q(reservation__start_date__gte=end_date_form, reservation__end_date__gte=end_date_form)).distinct()
+            # qs = qs.filter(~Q(reservation__start_date__lte=start_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form)).distinct()
            
-            
-            qs = qs.filter(~Q(reservation__start_date__lte=start_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form)).distinct()
-            
-           
-            qs = qs.filter(~Q(reservation__end_date=start_date_form)).distinct()
-            qs = qs.filter(~Q(reservation__end_date=end_date_form)).distinct()
-            qs = qs.filter(~Q(reservation__start_date=start_date_form)).distinct()
-            qs = qs.filter(~Q(reservation__start_date=end_date_form)).distinct()   
+            # qs = qs.filter(~Q(reservation__end_date=start_date_form)).distinct()
+            # qs = qs.filter(~Q(reservation__end_date=end_date_form)).distinct()
+            # qs = qs.filter(~Q(reservation__start_date=start_date_form)).distinct()
+            # qs = qs.filter(~Q(reservation__start_date=end_date_form)).distinct()   
+
+            qs = Equipment.all_not_reserved(start_date_form, end_date_form)
 
         ### category ###
         if self.is_valid_queryparam(category_form) and category_form != 'All':
