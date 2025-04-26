@@ -21,11 +21,8 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-
-        if user:
-            login(self.request, user)
-
-        return super().form_valid(form)
+        login(self.request, user)
+        return redirect(self.success_url)
     
 
 # # Create your views here.
@@ -44,6 +41,7 @@ class CustomLoginView(LoginView):
     template_name = "users/login.html"
     authentication_form = CustomAuthenticationForm
     redirect_authenticated_user = True
+    success_url = reverse_lazy("reservations:equipment_list")
 
 # def login_view(request):
 #     if request.method == "POST":

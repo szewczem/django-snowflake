@@ -103,3 +103,5 @@ document.addEventListener("DOMContentLoaded", function () {
   // Re-validate after change in input
   phoneInput.addEventListener("input", validatePhoneInput);
 });
+
+
