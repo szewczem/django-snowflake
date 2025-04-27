@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=20, unique=False)
     email = models.EmailField(unique=True)
-    phone_number = PhoneNumberField(region='PL')
+    phone_number = models.CharField(max_length=15)
 
     USERNAME_FIELD = 'email'  # Login via email (don't need backeds.py)
     REQUIRED_FIELDS = ['username', 'phone_number'] 

@@ -6,11 +6,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.list import ListView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic.edit import CreateView
+from django.views import View
+
 from .models import CustomUser
 
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 
 from reservations.models import Reservation
+
+from django.http import JsonResponse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 
 class RegisterView(CreateView):
@@ -25,7 +31,20 @@ class RegisterView(CreateView):
         return redirect(self.success_url)
     
 
-# # Create your views here.
+class EmailValidationView(View):
+    def get(self, request, *args, **kwargs):
+        email = request.GET.get('email', '').strip()
+        if not email:
+            return JsonResponse({'error': 'Email is required.'}, status=400)
+        try:
+            validate_email(email)
+        except ValidationError:
+            return JsonResponse({'error': 'Invalid email format.'}, status=400)
+        if CustomUser.objects.filter(email=email).exists():
+            return JsonResponse({'exists': True})
+        return JsonResponse({'exists': False})
+    
+
 # def register_view(request):
 #     if request.method == "POST":
 #         form = CustomUserCreationForm(request.POST)          

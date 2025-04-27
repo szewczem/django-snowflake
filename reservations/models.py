@@ -71,8 +71,8 @@ class Equipment(models.Model):
         # qs = qs.filter(~Q(reservation__start_date=start_date_form)).distinct()
         # qs = qs.filter(~Q(reservation__start_date=end_date_form)).distinct()
 
-        # # Return only available equipment
         # return qs
+        
         overlapping_reservations = Reservation.objects.filter(equipment=OuterRef('pk'), start_date__lte=end_date_form, end_date__gte=start_date_form, is_cancelled=False)
     
         return cls.objects.annotate(has_overlap=Exists(overlapping_reservations)).filter(has_overlap=False)

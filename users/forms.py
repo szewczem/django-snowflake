@@ -20,14 +20,11 @@ class CustomUserCreationForm(UserCreationForm):
 
     # Validate phone number only digits (and 9 digits long)
     def clean_phone_number(self):
-        phone = self.cleaned_data.get('phone_number')
-        if not phone:
-            raise forms.ValidationError("Phone number is required.")
-        
-        if phone.country_code != 48 or len(str(phone.national_number)) != 9:
-            raise forms.ValidationError("Enter a valid 9-digit Polish phone number.")
-
-        return phone
+        phone_number = self.cleaned_data.get('phone_number')
+        digits = re.sub(r'\D', '', str(phone_number))  # remove any non-digit chars
+        if len(digits) != 9:
+            raise forms.ValidationError("Enter a valid 9-digit phone number.")
+        return phone_number
 
     # (Optional) Username validations
     def clean_username(self):
