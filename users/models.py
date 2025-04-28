@@ -6,7 +6,7 @@ from django.conf import settings
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=20, unique=False)
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=9)
 
     USERNAME_FIELD = 'email'  # Login via email (don't need backeds.py)
     REQUIRED_FIELDS = ['username', 'phone_number'] 
