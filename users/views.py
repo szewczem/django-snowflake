@@ -16,6 +16,7 @@ from reservations.models import Reservation
 
 from django.http import JsonResponse
 from django.core.validators import validate_email
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 
@@ -44,6 +45,15 @@ class EmailValidationView(View):
             return JsonResponse({'exists': True})
         return JsonResponse({'exists': False})
     
+
+class PasswordValidationView(View):
+    def get(self, request, *args, **kwargs):
+        password = request.GET.get('password', '')
+        try:
+            validate_password(password)
+            return JsonResponse({"valid": True})
+        except ValidationError as e:
+            return JsonResponse({"valid": False, "errors": e.messages})
 
 # def register_view(request):
 #     if request.method == "POST":

@@ -48,58 +48,56 @@ document.addEventListener("DOMContentLoaded", function () {
             // Check email existence using AJAX
             checkEmail(email);
         });
-    }
-
-    // AJAX validation, checking if provided email exist
-    async function checkEmail(email) {
-        try {
-            const response = await fetch(`/users/ajax/check_email/?email=${encodeURIComponent(email)}`, {
-                method: "GET",
-            });
-            const data = await response.json();
-        
-            if (data.error) {
-                emailInput.classList.add("is-invalid");
-                emailInput.classList.remove("is-valid");
-                displayErrorMessage(data.error, "email");
-            } else if (data.exists) {
-                emailInput.classList.add("is-invalid");
-                emailInput.classList.remove("is-valid");
-                displayErrorMessage("This email is already taken.", "email");
-            } else {
-                emailInput.classList.add("is-valid");
-                emailInput.classList.remove("is-invalid");
-                clearErrorMessage("email");
+        // AJAX validation, checking if provided email exist
+        async function checkEmail(email) {
+            try {
+                const response = await fetch(`/users/ajax/check_email/?email=${encodeURIComponent(email)}`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+            
+                if (data.error) {
+                    emailInput.classList.add("is-invalid");
+                    emailInput.classList.remove("is-valid");
+                    displayErrorMessage(data.error, "email");
+                } else if (data.exists) {
+                    emailInput.classList.add("is-invalid");
+                    emailInput.classList.remove("is-valid");
+                    displayErrorMessage("This email is already taken.", "email");
+                } else {
+                    emailInput.classList.add("is-valid");
+                    emailInput.classList.remove("is-invalid");
+                    clearErrorMessage("email");
+                }
+            } catch (error) {
+                console.error("Error checking email:", error);
             }
-        } catch (error) {
-            console.error("Error checking email:", error);
         }
-    }
-    // AJAX validation, checking if provided email exist
-    // fetch(`/users/ajax/check_email/?email=${encodeURIComponent(email)}`, {
-    //     method: "GET",
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.error) {
-    //         emailInput.classList.add("is-invalid");
-    //         emailInput.classList.remove("is-valid");
-    //         displayErrorMessage(data.error, "email");
-    //     } else if (data.exists) {
-    //         emailInput.classList.add("is-invalid");
-    //         emailInput.classList.remove("is-valid");
-    //         displayErrorMessage("This email is already taken.", "email");
-    //     } else {
-    //         emailInput.classList.add("is-valid");
-    //         emailInput.classList.remove("is-invalid");
-    //         clearErrorMessage("email");
-    //     }
-    // })
-    // .catch(error => {
-    //     console.error("Error checking email:", error);
-    // });
-      
-
+        // AJAX validation, checking if provided email exist
+        // fetch(`/users/ajax/check_email/?email=${encodeURIComponent(email)}`, {
+        //     method: "GET",
+        // })
+        // .then(response => response.json())
+        // .then(data => {
+        //     if (data.error) {
+        //         emailInput.classList.add("is-invalid");
+        //         emailInput.classList.remove("is-valid");
+        //         displayErrorMessage(data.error, "email");
+        //     } else if (data.exists) {
+        //         emailInput.classList.add("is-invalid");
+        //         emailInput.classList.remove("is-valid");
+        //         displayErrorMessage("This email is already taken.", "email");
+        //     } else {
+        //         emailInput.classList.add("is-valid");
+        //         emailInput.classList.remove("is-invalid");
+        //         clearErrorMessage("email");
+        //     }
+        // })
+        // .catch(error => {
+        //     console.error("Error checking email:", error);
+        // });
+    } 
+    
     // Name validation
     if (nameInput) {
         nameInput.addEventListener("blur", function () {
@@ -200,9 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 displayErrorMessage("Password cannot contain spaces.", "password1");
                 return;
             } else {
-                password1Input.classList.add("is-valid");
-                password1Input.classList.remove("is-invalid");
-                clearErrorMessage("password1");
+                checkPassword(password1);
             }
         });
 
@@ -230,6 +226,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 clearErrorMessage("password2");
             }
         });
+        // AJAX checking password for too common (rejected by django)
+        async function checkPassword(password) {
+            try {
+                const response = await fetch(`/users/ajax/check_password/?password=${encodeURIComponent(password)}`, {
+                    method: "GET",
+                });
+                const data = await response.json();
+                
+                if (data.valid) {
+                    password1Input.classList.add("is-valid");
+                    password1Input.classList.remove("is-invalid");
+                    clearErrorMessage("password1");
+                } else {
+                    password1Input.classList.add("is-invalid");
+                    password1Input.classList.remove("is-valid");
+                    displayErrorMessage(data.errors.join(' '), "password1");
+                }
+            } catch (error) {
+                console.error("Error checking password:", error);
+            }
+        }
     }   
 });
 

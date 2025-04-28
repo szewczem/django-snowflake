@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout/', views.CustomLogoutView.as_view(), name="logout"),
     path('account/', views.Account.as_view(), name="account"),
     path('ajax/check_email/', views.EmailValidationView.as_view(), name='check_email'),
+    path('ajax/check_password/', views.PasswordValidationView.as_view(), name='check_password'),
 ]
