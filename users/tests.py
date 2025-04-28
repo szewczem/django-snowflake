@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from users.models import CustomUser  # adjust if needed
+from users.models import CustomUser
 
 class RegisterViewTests(TestCase):
     
