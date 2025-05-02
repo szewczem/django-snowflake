@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users',
     'django_filters',
     "phonenumber_field",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -137,18 +138,29 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
 
-
+# custom user
 AUTH_USER_MODEL = "users.CustomUser"
 
 # PHONENUMBER_DEFAULT_FORMAT = "NATIONAL"
 PHONENUMBER_DEFAULT_FORMAT = "E164"
 PHONENUMBER_DEFAULT_REGION = "PL"
 
+# user login/logout
 LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "reservations:equipment_list"
 LOGOUT_REDIRECT_URL = "/"
+
+# REST framework
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

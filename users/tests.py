@@ -30,6 +30,7 @@ class RegisterViewTests(TestCase):
         form = response.context['form']
         self.assertTrue(form.errors.get('password2'))
         self.assertIn("The two password fields didn’t match.", form.errors['password2'])
+        self.assertFalse(CustomUser.objects.exists())
 
     def test_register_common_password(self):
         form_data = {
@@ -45,3 +46,21 @@ class RegisterViewTests(TestCase):
         form = response.context['form']
         self.assertTrue(form.errors.get('password2'))
         self.assertIn("This password is too common.", form.errors['password2'])
+        self.assertFalse(CustomUser.objects.exists())
+
+    def test_register_invalid_phone_number(self):
+        form_data = {
+            'username': 'test3',
+            'email': 'test3@test.test',
+            'phone_number': '+48 123 456 789',
+            'password1': 'StrongPassword123',
+            'password2': 'StrongPassword123',
+        }
+        response = self.client.post(reverse('users:register'), data=form_data)
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertTrue(form.errors.get('phone_number'))
+        self.assertIn("Ensure this value has at most 9 characters (it has 15).", form.errors['phone_number'])
+        self.assertFormError(form, 'phone_number', "Ensure this value has at most 9 characters (it has 15).")
+        self.assertFalse(CustomUser.objects.exists())
