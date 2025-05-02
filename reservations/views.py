@@ -20,6 +20,9 @@ from .forms import ReservationForm
 from .models import Equipment, Reservation, Category
 from .filters import EquipmentFilter
 
+from rest_framework import viewsets, permissions
+from . import serializer
+
 
 # equipment_list view
 class EquipmentListView(ListView):
@@ -60,17 +63,6 @@ class EquipmentListView(ListView):
         ### dates ###
         if start_date_form or end_date_form:          
             start_date_form, end_date_form = self.is_valid_dates()
-            # qs = Equipment.is_reserved(start_date_form, end_date_form)
-
-            # qs = qs.filter(Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form) | Q(reservation__start_date__gte=end_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__isnull=True)).distinct()
-            
-            # qs = qs.filter(~Q(reservation__start_date__lte=start_date_form, reservation__end_date__gte=end_date_form) | Q(reservation__start_date__lte=start_date_form, reservation__end_date__lte=start_date_form)).distinct()
-           
-            # qs = qs.filter(~Q(reservation__end_date=start_date_form)).distinct()
-            # qs = qs.filter(~Q(reservation__end_date=end_date_form)).distinct()
-            # qs = qs.filter(~Q(reservation__start_date=start_date_form)).distinct()
-            # qs = qs.filter(~Q(reservation__start_date=end_date_form)).distinct()   
-
             qs = Equipment.all_not_reserved(start_date_form, end_date_form)
 
         ### category ###
@@ -202,3 +194,20 @@ class ReservationDeleteView(SuccessMessageMixin, DeleteView):
     
     def get_success_message(self, cleaned_data):
         return f"Reservation: {self.object.equipment.category}, {self.object.equipment.name}, {self.object.start_date} - {self.object.end_date} has been successfully canceled."
+
+
+
+class EquipmentViewSet(viewsets.ModelViewSet):
+    queryset = Equipment.objects.all()
+    serializer_class = serializer.EquipmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = serializer.CategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = serializer.ReservationSerializer
+    permission_classes = [permissions.IsAuthenticated]
