@@ -194,10 +194,10 @@ else:
     }
 
 STORAGES = {
-    # "default": {
-    #     "BACKEND": "django.core.files.storage.FileSystemStorage",
-    #     "LOCATION": MEDIA_ROOT,
-    # },
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "LOCATION": MEDIA_ROOT,
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     }
