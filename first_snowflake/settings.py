@@ -42,6 +42,7 @@ DB_NAME = os.getenv("DATABASE_NAME")
 DB_USER = os.getenv("DATABASE_USER")
 DB_PASSWORD = os.getenv("DATABASE_PASSWORD")
 DB_HOST = os.getenv("DATABASE_HOST")
+DB_PORT = os.getenv("DB_PORT", "5432")
 
 if DB_NAME and DB_USER and DB_PASSWORD and DB_HOST:
     DATABASE_URL = f"postgres://{urllib.parse.quote(DB_USER)}:{urllib.parse.quote(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -184,17 +185,17 @@ STORAGES = {
     }
 }
 
-if DEBUG:
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-    MEDIA_URL = "media/"
-    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-else:
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
-        'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
-        'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
-    }
+# if DEBUG:
+#     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+#     MEDIA_URL = "media/"
+#     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+# else:
+#     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+#     CLOUDINARY_STORAGE = {
+#         'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+#         'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+#         'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
+#     }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
