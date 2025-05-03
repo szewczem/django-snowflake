@@ -302,12 +302,20 @@ a:hover {
 }
 
 .banner {
-  background-image: url('../../media/registration_banner.jpg'); 
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover; 
-  background-color: var(--halfwhite); 
+  position: relative;
+  overflow: hidden;
   height: 100vh;
+  background-color: var(--halfwhite);
+}
+
+.banner-img {
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .form-section {
