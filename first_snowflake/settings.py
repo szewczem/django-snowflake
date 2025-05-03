@@ -30,11 +30,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # data from .env
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-default-key")
-
 DEBUG = os.getenv("DEBUG", "True") == "True"
-
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Koyeb-provided individual env vars
@@ -49,6 +46,13 @@ if DB_NAME and DB_USER and DB_PASSWORD and DB_HOST:
 else:
     DATABASE_URL = os.getenv("DATABASE_URL")
 
+
+cloudinary.config(
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key = os.getenv("CLOUDINARY_API_KEY"),
+    api_secret = os.getenv("CLOUDINARY_API_SECRET"),
+    secure = True
+)
 
 '''
 # Quick-start development settings - unsuitable for production
@@ -106,6 +110,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 "django.template.context_processors.media",
+                'first_snowflake.context_processors.global_image_paths',
             ],
         },
     },
@@ -172,31 +177,33 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = 'media/'
+# MEDIA_URL = 'media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# STORAGES = {
-#     "default": {
-#         "BACKEND": "django.core.files.storage.FileSystemStorage",
-#         "LOCATION": MEDIA_ROOT,
-#     },
-#     "staticfiles": {
-#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#     }
-# }
+if DEBUG:
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+else:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
+        'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+        'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
+    }
 
-# if DEBUG:
-#     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-#     MEDIA_URL = "media/"
-#     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-# else:
-#     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-#     CLOUDINARY_STORAGE = {
-#         'CLOUD_NAME': os.getenv("CLOUDINARY_CLOUD_NAME"),
-#         'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
-#         'API_SECRET': os.getenv("CLOUDINARY_API_SECRET"),
-#     }
+STORAGES = {
+    # "default": {
+    #     "BACKEND": "django.core.files.storage.FileSystemStorage",
+    #     "LOCATION": MEDIA_ROOT,
+    # },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    }
+}
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
