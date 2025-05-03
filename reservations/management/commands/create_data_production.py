@@ -2,6 +2,9 @@ import random
 from django.core.management.base import BaseCommand
 from reservations.models import Category, Equipment
 
+from cloudinary.uploader import upload
+
+
 categories = [
   'Ski',
   'Ski',
@@ -74,20 +77,30 @@ def generate_description(category_name):
             return description_file.read()
 
 class Command(BaseCommand):
+    help = 'Generates equipment data and uploads images to Cloudinary'
 
     def add_arguments(self, parser):
-        parser.add_argument('file_name', type=str, help='The txt file that contains equipment names')
+        parser.add_argument('file_name', type=str, help='The txt filename that contains equipment names')
 
     def handle(self, *args, **kwargs):
         file_name = kwargs['file_name']
+
         with open(f'{file_name}.txt') as file:
             for row in file:
                 name = row
                 category_name = generate_category()
                 length = generate_length()
                 level = generate_level()
-                banner = generate_banner(category_name)
+                local_banner_path = generate_banner(category_name)
                 description = generate_description(category_name)
+
+                # Upload to Cloudinary
+                try:
+                    result = upload(f'media/{local_banner_path}')
+                    banner_url = result['secure_url']
+                except Exception as e:
+                    self.stderr.write(f"Failed to upload {local_banner_path}: {e}")
+                    continue
 
                 category, _ = Category.objects.get_or_create(name=category_name)
 
@@ -96,7 +109,7 @@ class Command(BaseCommand):
                     name=name,
                     length=length,
                     level=level,
-                    banner=banner,
+                    banner=banner_url,
                     description=description,
                 )
                 equipment.save()     

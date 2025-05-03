@@ -29,7 +29,7 @@ class EquipmentListView(ListView):
     model = Equipment
     template_name = "reservations/equipment_list.html"
     context_object_name = 'equipment_list'
-    paginate_by = 8    # Items per page
+    paginate_by = 16    # Items per page
 
     def is_valid_queryparam(self, param):
         return param != '' and param is not None
