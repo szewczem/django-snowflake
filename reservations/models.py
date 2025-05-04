@@ -54,27 +54,20 @@ class Equipment(models.Model):
     def get_banner_url(self):
         if self.banner and hasattr(self.banner, 'url'):
             url = self.banner.url
-            # Decode percent-encoded URLs
             if url.startswith(settings.MEDIA_URL) and '%3A' in url:
                 # Remove the MEDIA_URL prefix
-                encoded_url = url[len(settings.MEDIA_URL):]
-                # Decode the percent-encoded URL
-                
+                encoded_url = url[len(settings.MEDIA_URL):]                
                 decoded_url = urllib.parse.unquote(encoded_url)
-                decoded_url = decoded_url[:7] + "/" + decoded_url[7:]
-                return decoded_url
+                # decoded_url = decoded_url[:7] + "/" + decoded_url[7:]
+                url = decoded_url                
+            if url.startswith('https:/') and not url.startswith('https://'):
+                url = url.replace('https:/', 'https://')
+                # return decoded_url
             return url
         if settings.DEBUG:
             return settings.MEDIA_URL + "equipment_photo/test.jpg"
         return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
-    
-    # def get_banner_url(self):
-    #     if self.banner and hasattr(self.banner, 'url'):
-    #         return self.banner.url
-    #     if settings.DEBUG:
-    #         return settings.MEDIA_URL + "equipment_photo/test.jpg"
-    #     return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
-    
+       
     def is_reserved(self, start_date, end_date):
         reservations = self.reservation.all()
         return reservations.filter(start_date__lte=end_date, end_date__gte=start_date).exists()
