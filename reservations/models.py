@@ -5,6 +5,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Q
 from django.db.models import Exists, OuterRef
 from django.conf import settings
+import urllib.parse
 
 
 class Category(models.Model):
@@ -44,18 +45,37 @@ class Equipment(models.Model):
     name = models.CharField(max_length=64)
     length = models.CharField(max_length=3, choices=LENGTH_CHOICES, null=True)
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES, null=True)
-    banner = models.ImageField(blank=True)
+    banner = models.ImageField(max_length=255, blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
     
     def get_banner_url(self):
+        url = ""
         if self.banner and hasattr(self.banner, 'url'):
-            return self.banner.url
-        if settings.DEBUG:
-            return settings.MEDIA_URL + "equipment_photo/test.jpg"
-        return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
+            url = self.banner.url
+        else:
+            if settings.DEBUG:
+                return settings.MEDIA_URL + "equipment_photo/test.jpg"
+            return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
+
+        # If Django has prefixed a percent-encoded URL, strip & decode:
+        prefix = settings.MEDIA_URL
+        if url.startswith(prefix) and '%' in url:
+            # remove the leading "/media/" (or whatever MEDIA_URL is)
+            encoded = url[len(prefix):]
+            # percent-decode it back to "https://…"
+            return urllib.parse.unquote(encoded)
+
+        return url
+    
+    # def get_banner_url(self):
+    #     if self.banner and hasattr(self.banner, 'url'):
+    #         return self.banner.url
+    #     if settings.DEBUG:
+    #         return settings.MEDIA_URL + "equipment_photo/test.jpg"
+    #     return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
     
     def is_reserved(self, start_date, end_date):
         reservations = self.reservation.all()
