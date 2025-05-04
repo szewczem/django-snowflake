@@ -85,7 +85,7 @@
                         <div class="card-header text-center card-equipment-level" style="{{ equipment.level|card_background }}">
                             {{ equipment.level|title }}
                         </div>
-                        <img src="{{ equipment.banner.url }}" alt="...">
+                        <img src="{{ equipment.get_banner_url }}" alt="{{ equipment.name }}">
                         <div class="card-body">
                         <h5 class="card-title">{{ equipment.name }}</h5>
                         <p class="card-equipment-category">{{ equipment.category }}</p>
