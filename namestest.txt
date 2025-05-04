@@ -1,8 +1,4 @@
-Winter Wizard
-Avalanche Adventurer
-Polar Pioneer
-Snowplow Swooper
-Skiing Snowman
-Winter Wipeout
-Sledding Surge
-Frosty Finesse
+SpeedRun
+Snowpiercer
+Icebreaker
+Sliders

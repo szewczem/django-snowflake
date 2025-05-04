@@ -17,11 +17,32 @@ class Category(models.Model):
     
 
 class Equipment(models.Model):   
+    LEVEL_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+    ]
+
+    LENGTH_CHOICES = [
+        ('130', '130 cm'),
+        ('135', '135 cm'),
+        ('140', '140 cm'),
+        ('145', '145 cm'),
+        ('150', '150 cm'),
+        ('155', '155 cm'),
+        ('160', '160 cm'),
+        ('165', '165 cm'),
+        ('170', '170 cm'),
+        ('175', '175 cm'),
+        ('180', '180 cm'),
+        ('185', '185 cm'),
+    ]
+
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='category')
     name = models.CharField(max_length=64)
-    length = models.CharField(max_length=3, null=True)
-    level = models.CharField(max_length=20, null=True)
-    banner = models.ImageField(default="{{ EQUIPMENT_PHOTO_TEST }}", blank=True)
+    length = models.CharField(max_length=3, choices=LENGTH_CHOICES, null=True)
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, null=True)
+    banner = models.ImageField(default="equipment_photo/test.jpg", blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
