@@ -1,6 +1,13 @@
 from django.forms import ModelForm, widgets
 from .models import Reservation, Equipment
 from django import forms
+from django.contrib import admin
+from phonenumber_field.formfields import PhoneNumberField
+
+from urllib.request import urlopen
+from django.core.files import File
+from tempfile import NamedTemporaryFile
+import os
 
 
 class EquipmentForm(forms.ModelForm):
@@ -19,7 +26,19 @@ class EquipmentForm(forms.ModelForm):
         url = self.cleaned_data.get('banner_url')
 
         if url:
-            instance.banner = url 
+            try:
+                # Download the image from the URL
+                response = urlopen(url, timeout=15)
+                img_temp = NamedTemporaryFile(delete=True)
+                img_temp.write(response.read())
+                img_temp.flush()
+
+                # Use the filename from the URL
+                file_name = os.path.basename(url)
+                instance.banner.save(file_name, File(img_temp), save=False)
+
+            except Exception as e:
+                raise forms.ValidationError(f"Could not fetch image from URL: {e}")
 
         if commit:
             instance.save()
