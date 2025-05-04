@@ -4,6 +4,9 @@ from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Q
 from django.db.models import Exists, OuterRef
+from django.conf import settings
+
+default_banner = "equipment_photo/test.jpg" if settings.DEBUG else "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -42,7 +45,7 @@ class Equipment(models.Model):
     name = models.CharField(max_length=64)
     length = models.CharField(max_length=3, choices=LENGTH_CHOICES, null=True)
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES, null=True)
-    banner = models.ImageField(default="equipment_photo/test.jpg", blank=True)
+    banner = models.ImageField(default=default_banner, blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
