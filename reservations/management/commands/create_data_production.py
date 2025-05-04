@@ -4,6 +4,9 @@ from reservations.models import Category, Equipment
 
 from first_snowflake.image_config import IMAGE_PATHS
 import requests
+from urllib.request import urlopen
+from django.core.files import File
+from tempfile import NamedTemporaryFile
 
 
 categories = [
@@ -47,7 +50,7 @@ def generate_level():
     index = random.randint(0,2)
     return level[index]
 
-def generate_banner(category_name):
+def generate_banner_url(category_name):
     if category_name=='Ski':
         index = random.randint(0,61)
         key = f'EQUIPMENT_PHOTO_SKI_{index}'
@@ -93,26 +96,43 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         file_name = kwargs['file_name']
+        try:
+            with open(f"{file_name}.txt") as f:
+                names = [line.strip() for line in f if line.strip()]
+        except FileNotFoundError:
+            self.stderr.write(f"File {file_name}.txt not found")
+            return
 
-        with open(f'{file_name}.txt') as file:
-            for row in file:
-                name = row
-                category_name = generate_category()
-                length = generate_length()
-                level = generate_level()
-                banner = generate_banner(category_name)
-                description = generate_description(category_name)
+        created = 0
+        for name in names:
+            category_name = generate_category()
+            length = generate_length()
+            level = generate_level()
+            banner_url = generate_banner_url(category_name)
+            description = generate_description(category_name)
 
-                category, _ = Category.objects.get_or_create(name=category_name)
+            category, _ = Category.objects.get_or_create(name=category_name)
 
-                equipment = Equipment(
+            # Prepare a temp file to download the image
+            img_temp = NamedTemporaryFile(delete=True)
+            try:
+                img_temp.write(urlopen(banner_url).read())
+                img_temp.flush()
+
+                equip = Equipment(
                     category=category,
-                    name=name,
+                    name=name, 
                     length=length,
                     level=level,
-                    banner=banner,
                     description=description,
                 )
-                equipment.save()     
 
-        self.stdout.write(self.style.SUCCESS('Data created successfully'))
+                # Use ImageField.save(name, File) to store the downloaded image
+                file_base = banner_url.rsplit('/', 1)[-1]
+                equip.banner.save(file_base, File(img_temp), save=True)
+                created += 1
+                self.stdout.write(f"Created {equip.name}")
+            except Exception as e:
+                self.stderr.write(f"Failed {name}: {e}")
+
+        self.stdout.write(self.style.SUCCESS(f"Done! Created {created} equipment entries."))
