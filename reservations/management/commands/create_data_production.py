@@ -113,26 +113,19 @@ class Command(BaseCommand):
 
             category, _ = Category.objects.get_or_create(name=category_name)
 
-            # Prepare a temp file to download the image
-            img_temp = NamedTemporaryFile(delete=True)
+            equipment = Equipment(
+                category=category,
+                name=name, 
+                length=length,
+                level=level,
+                banner=banner_url,
+                description=description,
+            )
             try:
-                img_temp.write(urlopen(banner_url).read())
-                img_temp.flush()
-
-                equip = Equipment(
-                    category=category,
-                    name=name, 
-                    length=length,
-                    level=level,
-                    description=description,
-                )
-
-                # Use ImageField.save(name, File) to store the downloaded image
-                file_base = banner_url.rsplit('/', 1)[-1]
-                equip.banner.save(file_base, File(img_temp), save=True)
+                equipment.save()
                 created += 1
-                self.stdout.write(f"Created {equip.name}")
+                self.stdout.write(f"Created: {equipment.name}")
             except Exception as e:
-                self.stderr.write(f"Failed {name}: {e}")
+                self.stderr.write(f"Failed to create {name}: {e}")
 
         self.stdout.write(self.style.SUCCESS(f"Done! Created {created} equipment entries."))
