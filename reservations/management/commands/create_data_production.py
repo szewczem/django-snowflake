@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from reservations.models import Category, Equipment
 
 from first_snowflake.image_config import IMAGE_PATHS
+import requests
 
 
 categories = [
@@ -66,19 +67,23 @@ CLOUDINARY_DESCRIPTION_BASE = "https://res.cloudinary.com/defosob6j/raw/upload/d
 def generate_description(category_name):
     if category_name=='Ski':
         index = random.randint(0,26)
-        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/ski/{index}.txt', 'r') as description_file:
-            return description_file.read()
+        url = f'{CLOUDINARY_DESCRIPTION_BASE}/ski/{index}.txt'
     elif category_name=='Snowboard':
         index = random.randint(0,19)
-        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/snowboard/{index}.txt', 'r') as description_file:
-            return description_file.read()
+        url = f'{CLOUDINARY_DESCRIPTION_BASE}/snowboard/{index}.txt'
     elif category_name=='Sled':
         index = random.randint(0,9)
-        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/sled/{index}.txt', 'r') as description_file:
-            return description_file.read()
+        url = f'{CLOUDINARY_DESCRIPTION_BASE}/sled/{index}.txt'
     else:
-        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/ski/test.txt', 'r') as description_file:
-            return description_file.read()
+        url = f'{CLOUDINARY_DESCRIPTION_BASE}/ski/test.txt'
+        
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.text
+    except Exception as e:
+        print(f"Failed to fetch description from {url}: {e}")
+        return "No description available."
 
 class Command(BaseCommand):
     help = 'Generates equipment data and uploads images to Cloudinary'
