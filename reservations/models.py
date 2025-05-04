@@ -52,23 +52,21 @@ class Equipment(models.Model):
         return self.name
     
     def get_banner_url(self):
-        url = ""
         if self.banner and hasattr(self.banner, 'url'):
             url = self.banner.url
-        else:
-            if settings.DEBUG:
-                return settings.MEDIA_URL + "equipment_photo/test.jpg"
-            return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
-
-        # If Django has prefixed a percent-encoded URL, strip & decode:
-        prefix = settings.MEDIA_URL
-        if url.startswith(prefix) and '%' in url:
-            # remove the leading "/media/" (or whatever MEDIA_URL is)
-            encoded = url[len(prefix):]
-            # percent-decode it back to "https://…"
-            return urllib.parse.unquote(encoded)
-
-        return url
+            # Decode percent-encoded URLs
+            if url.startswith(settings.MEDIA_URL) and '%3A' in url:
+                # Remove the MEDIA_URL prefix
+                encoded_url = url[len(settings.MEDIA_URL):]
+                # Decode the percent-encoded URL
+                
+                decoded_url = urllib.parse.unquote(encoded_url)
+                decoded_url = decoded_url[:7] + "/" + decoded_url[7:]
+                return decoded_url
+            return url
+        if settings.DEBUG:
+            return settings.MEDIA_URL + "equipment_photo/test.jpg"
+        return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
     
     # def get_banner_url(self):
     #     if self.banner and hasattr(self.banner, 'url'):
