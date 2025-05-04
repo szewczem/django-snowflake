@@ -6,7 +6,6 @@ from django.db.models import Q
 from django.db.models import Exists, OuterRef
 from django.conf import settings
 
-default_banner = "equipment_photo/test.jpg" if settings.DEBUG else "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
 
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -45,11 +44,18 @@ class Equipment(models.Model):
     name = models.CharField(max_length=64)
     length = models.CharField(max_length=3, choices=LENGTH_CHOICES, null=True)
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES, null=True)
-    banner = models.ImageField(default=default_banner, blank=True)
+    banner = models.ImageField(blank=True)
     description = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
+    
+    def get_banner_url(self):
+        if self.banner and hasattr(self.banner, 'url'):
+            return self.banner.url
+        if settings.DEBUG:
+            return settings.MEDIA_URL + "equipment_photo/test.jpg"
+        return "https://res.cloudinary.com/defosob6j/image/upload/v1746303420/static_images/equipment_photo/test.jpg"
     
     def is_reserved(self, start_date, end_date):
         reservations = self.reservation.all()
