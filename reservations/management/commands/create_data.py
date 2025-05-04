@@ -70,7 +70,7 @@ def generate_description(category_name):
         with open(f'media/equipment_description/sled/{index}.txt', 'r') as description_file:
             return description_file.read()
     else:
-        with open(f'media/equipment_description/test.txt', 'r') as description_file:
+        with open(f'media/equipment_description/ski/test.txt', 'r') as description_file:
             return description_file.read()
 
 class Command(BaseCommand):
