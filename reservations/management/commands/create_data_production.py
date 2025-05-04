@@ -2,7 +2,7 @@ import random
 from django.core.management.base import BaseCommand
 from reservations.models import Category, Equipment
 
-from cloudinary.uploader import upload
+from first_snowflake.image_config import IMAGE_PATHS
 
 
 categories = [
@@ -49,31 +49,35 @@ def generate_level():
 def generate_banner(category_name):
     if category_name=='Ski':
         index = random.randint(0,61)
-        return f'equipment_photo/ski/{index}.jpg'
+        key = f'EQUIPMENT_PHOTO_SKI_{index}'
     elif category_name=='Snowboard':
         index = random.randint(0,41)
-        return f'equipment_photo/snowboard/{index}.jpg'
+        key = f'EQUIPMENT_PHOTO_SNOWBOARD_{index}'
     elif category_name=='Sled':
         index = random.randint(0,7)
-        return f'equipment_photo/sled/{index}.jpg'
+        key = f'EQUIPMENT_PHOTO_SLED_{index}'
     else:
-        return f'equipment_photo/test.jpg'
+        key = 'EQUIPMENT_PHOTO_TEST'
+    return IMAGE_PATHS.get(key, IMAGE_PATHS['EQUIPMENT_PHOTO_TEST'])
     
+
+CLOUDINARY_DESCRIPTION_BASE = "https://res.cloudinary.com/defosob6j/raw/upload/descriptions"
+
 def generate_description(category_name):
     if category_name=='Ski':
         index = random.randint(0,26)
-        with open(f'media/equipment_description/ski/{index}.txt', 'r') as description_file:
+        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/ski/{index}.txt', 'r') as description_file:
             return description_file.read()
     elif category_name=='Snowboard':
         index = random.randint(0,19)
-        with open(f'media/equipment_description/snowboard/{index}.txt', 'r') as description_file:
+        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/snowboard/{index}.txt', 'r') as description_file:
             return description_file.read()
     elif category_name=='Sled':
         index = random.randint(0,9)
-        with open(f'media/equipment_description/sled/{index}.txt', 'r') as description_file:
+        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/sled/{index}.txt', 'r') as description_file:
             return description_file.read()
     else:
-        with open(f'media/equipment_description/test.txt', 'r') as description_file:
+        with open(f'{CLOUDINARY_DESCRIPTION_BASE}/ski/test.txt', 'r') as description_file:
             return description_file.read()
 
 class Command(BaseCommand):
@@ -91,16 +95,8 @@ class Command(BaseCommand):
                 category_name = generate_category()
                 length = generate_length()
                 level = generate_level()
-                local_banner_path = generate_banner(category_name)
+                banner = generate_banner(category_name)
                 description = generate_description(category_name)
-
-                # Upload to Cloudinary
-                try:
-                    result = upload(f'media/{local_banner_path}')
-                    banner_url = result['secure_url']
-                except Exception as e:
-                    self.stderr.write(f"Failed to upload {local_banner_path}: {e}")
-                    continue
 
                 category, _ = Category.objects.get_or_create(name=category_name)
 
@@ -109,7 +105,7 @@ class Command(BaseCommand):
                     name=name,
                     length=length,
                     level=level,
-                    banner=banner_url,
+                    banner=banner,
                     description=description,
                 )
                 equipment.save()     

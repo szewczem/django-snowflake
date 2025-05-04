@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 # Folders under your project-level media/ directory:
-MEDIA_SUBFOLDERS = ['footer', 'home', 'register', 'equipment_photo',]
+MEDIA_SUBFOLDERS = ['footer', 'home', 'register', 'equipment_photo', 'equipment_photo/ski', 'equipment_photo/snowboard', 'equipment_photo/sled',]
 # The folder prefix in your Cloudinary account:
 CLOUDINARY_BASE_FOLDER = 'static_images'
 
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                         overwrite=True,
                         resource_type='image'
                     )
-                    key = f"{sub.upper()}_{os.path.splitext(fname)[0].upper()}"
+                    key = f"{sub.upper().replace('/', '_')}_{os.path.splitext(fname)[0].upper()}"
                     image_urls[key] = result['secure_url']
                 except Exception as e:
                     self.stderr.write(f"Failed to upload {local_path}: {e}")
