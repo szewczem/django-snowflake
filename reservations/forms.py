@@ -1,13 +1,6 @@
 from django.forms import ModelForm, widgets
 from .models import Reservation, Equipment
 from django import forms
-from django.contrib import admin
-from phonenumber_field.formfields import PhoneNumberField
-
-from urllib.request import urlopen
-from django.core.files import File
-from tempfile import NamedTemporaryFile
-import os
 
 
 class EquipmentForm(forms.ModelForm):
@@ -26,18 +19,11 @@ class EquipmentForm(forms.ModelForm):
         url = self.cleaned_data.get('banner_url')
 
         if url:
-            img_temp = NamedTemporaryFile(delete=True)
-            img_temp.write(urlopen(url).read())
-            img_temp.flush()
-
-            # Extract the filename from the URL
-            file_base = os.path.basename(url)
-            instance.banner.save(file_base, File(img_temp), save=False)
+            instance.banner = url 
 
         if commit:
             instance.save()
         return instance
-
 
 class ReservationForm(ModelForm):    
      
