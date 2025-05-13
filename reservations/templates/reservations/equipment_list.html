@@ -18,7 +18,7 @@
                 <span class="input-group-text" id="addon-wrapping"><i class="fa fa-search"></i><span>
             </div>
             <div class="form-group col-md-2 col-lg-2">
-                <label for="startDate">Start date</label>
+                <label class="label" for="startDate">Start date</label>
                 <input type="date" class="form-control" id="startDate" name="start_date" 
                 {% if request.GET.start_date %} 
                     value="{{ start_date_form }}" 
@@ -28,7 +28,7 @@
                 >
             </div>
             <div class="form-group col-md-2 col-lg-2">
-                <label for="endDate">End date</label>
+                <label class="label" for="endDate">End date</label>
                 <input type="date" class="form-control" id="endDate" name="end_date" 
                 {% if request.GET.end_date %} 
                     value="{{ end_date_form }}" 
@@ -38,7 +38,7 @@
                 >
             </div>
             <div class="form-group col-md-4">
-                <label for="category">Category</label>
+                <label class="label" for="category">Category</label>
                 <select class="form-select" aria-label="Select category" name="category">
                     <option>All</option>                          
                     {% for cat in category %}
@@ -51,7 +51,7 @@
                 </select>
             </div>
             <div class="form-group col-md-4">
-                <label for="level">Level</label>
+                <label class="label" for="level">Level</label>
                 <select class="form-select" name="level">                
                     <option>All</option>                                
                     {% for lev in level %}

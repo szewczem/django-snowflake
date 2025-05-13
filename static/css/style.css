@@ -128,7 +128,6 @@ a:hover {
   margin-top: 3rem;
   padding: 2rem;  
   background-color: rgba(30,102,130,0.1);
-  font-size: .9rem;
 }
 
 .search-btn {
@@ -212,10 +211,6 @@ a:hover {
   text-justify: inter-word;
 }
 
-.detail-form-container {
-  font-size: .9rem;
-}
-
 .card-details-title {
   font-size: 1.1rem;
 }
@@ -227,6 +222,11 @@ a:hover {
 .alert-container {
   margin-top: 2rem;
   margin-bottom: 0;
+}
+
+.reservation-label {
+  text-align: center;
+  margin-left: .5rem;
 }
 
 .reservation-form-body {
@@ -245,6 +245,9 @@ a:hover {
   font-size: 1rem;
 }
 
+.deatil-summary-container {
+  padding-bottom: 1.5rem;
+}
 
 
 /***** users_account *****/
@@ -338,16 +341,6 @@ a:hover {
 
 
 
-
-
-
-
-
-.text-small {
-  font-size: var(--h6-size);
-}
-
-
 .form-with-validation {
   font-size: 1.1rem;
   padding: 1rem;
@@ -424,4 +417,28 @@ a:hover {
   padding: 2rem;  
   background-color: rgba(30,102,130,0.1);
   font-size: .9rem;
+}
+
+
+
+
+/* GLOBAL */
+
+.text-small {
+  font-size: var(--h6-size);
+}
+
+.label {
+  font-size: var(--label-size);
+  font-weight: 600;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.table-padding,
+.table-padding th,
+.table-padding td {
+  line-height: 1rem;
 }
