@@ -41,16 +41,16 @@ modal.addEventListener('show.bs.modal', function () {
 
 /// phone number validation, only digits ///
 document.addEventListener("DOMContentLoaded", function () {
-  const phoneInput = document.getElementById("phoneNumber");
-  const feedback = document.getElementById("phone-feedback");
+  const phoneInput = document.getElementById("phone-number");
+  const feedback = document.getElementById("phone-error");
   const reserveBtn = document.getElementById("reserveBtn");
 
   if (!phoneInput) return;
 
   const phoneRegex = /^[0-9]{9}$/;
 
-  // Validate input during typing
-  function validatePhoneInput() {
+  // Validate input 
+  phoneInput.addEventListener("blur", function () { 
     const value = phoneInput.value;
     const isValid = phoneRegex.test(value);
 
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
       feedback.classList.remove("d-none");
       reserveBtn.classList.add("disabled");
     }
-  }
+  });
 
   // Allow only digits during typing
   phoneInput.addEventListener("keypress", function (event) {

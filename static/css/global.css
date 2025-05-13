@@ -23,13 +23,14 @@
     --halfwhite: #f8f9fa;   
 
     --h6-size: .75rem;
+    --label-size: .85rem;
 }
 
 body {
     min-height: 100vh;
     background-color: whitesmoke;
     color: black;
-    font-size: 1.1rem;
+    font-size: 1rem;
     overflow-x: hidden;  
 }
 
