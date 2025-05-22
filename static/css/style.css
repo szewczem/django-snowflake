@@ -249,6 +249,22 @@ a:hover {
   padding-bottom: 1.5rem;
 }
 
+.invalid-feedback {
+  display: block;  
+}
+
+.date-error-div {
+  margin: 0;
+}
+
+.warning-check:checked {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+.warning-check:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+}
+
 
 /***** users_account *****/
 .user_reservation {
