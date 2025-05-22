@@ -27,58 +27,83 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 })
 
-// getting dates from equipment_detail to modal
-const modal = document.getElementById('exampleModal');
+// // getting dates from equipment_detail to modal
+// const modal = document.getElementById('exampleModal');
 
-modal.addEventListener('show.bs.modal', function () {
-  const detailStartDate = document.getElementById('detail-start-date').value;
-  const detailEndDate = document.getElementById('detail-end-date').value;
+// modal.addEventListener('show.bs.modal', function () {
+//   const startDateInput = document.getElementById('reservation-start-date');
+//   const endDateInput = document.getElementById('reservation-end-date');
 
-  document.getElementById('reservation-start-date').value = detailStartDate;
-  document.getElementById('reservation-end-date').value = detailEndDate;
-});
+//   const detailStartDate = document.getElementById('detail-start-date').value;
+//   const detailEndDate = document.getElementById('detail-end-date').value;
+
+//   if (!startDateInput.value) {
+//     startDateInput.value = detailStartDate;
+//   }
+//   if (!endDateInput.value) {
+//     endDateInput.value = detailEndDate;
+//   }
+// });
 
 
-/// phone number validation, only digits ///
+// Reservation form validation //
 document.addEventListener("DOMContentLoaded", function () {
   const phoneInput = document.getElementById("phone-number");
-  const feedback = document.getElementById("phone-error");
-  const reserveBtn = document.getElementById("reserveBtn");
+  const startDateInput = document.getElementById("reservation-start-date");
+  const endDateInput = document.getElementById("reservation-end-date");
+  const checkbox = document.getElementById("check-agreement");
+  const reserveBtn = document.getElementById("reserve-btn");
 
-  if (!phoneInput) return;
+  const phoneFeedback = document.getElementById("phone-error");
+  const dateError = document.getElementById("date-error");
 
+
+  function setValid(input, feedback) {
+    input.classList.add("is-valid");
+    input.classList.remove("is-invalid");
+    feedback.classList.add("d-none");
+  }
+
+  function setInvalid(input, feedback, message) {
+    input.classList.add("is-invalid");
+    input.classList.remove("is-valid");
+    feedback.textContent = message;
+    feedback.classList.remove("d-none");
+  }
+
+  // Phone number validation //
   const phoneRegex = /^[0-9]{9}$/;
 
-  // Validate input 
-  phoneInput.addEventListener("blur", function () { 
+  if(phoneInput.value) {
+    validatePhoneInput();
+  }
+
+  // Full phone validation with feedback (only on blur)
+  function validatePhoneInput() {
     const value = phoneInput.value;
     const isValid = phoneRegex.test(value);
 
     if (value === "") {
       phoneInput.classList.remove("is-valid", "is-invalid");
-      feedback.classList.add("d-none");
-      reserveBtn.classList.add("disabled");
+      phoneFeedback.classList.add("d-none");
     } else if (isValid) {
-      phoneInput.classList.add("is-valid");
-      phoneInput.classList.remove("is-invalid");
-      feedback.classList.add("d-none");
-      reserveBtn.classList.remove("disabled");
+      setValid(phoneInput, phoneFeedback)
+      return true;
     } else {
-      phoneInput.classList.add("is-invalid");
-      phoneInput.classList.remove("is-valid");
-      feedback.classList.remove("d-none");
-      reserveBtn.classList.add("disabled");
+      setInvalid(phoneInput, phoneFeedback, 'Enter a valid 9-digit phone number.')
+      return false;
     }
-  });
+    return false;
+  }
 
-  // Allow only digits during typing
+  // Allow only digits
   phoneInput.addEventListener("keypress", function (event) {
     if (!/^\d$/.test(event.key)) {
       event.preventDefault();
     }
   });
 
-  // Clean pasted content and insert digits only
+  // Handle paste for digits only
   phoneInput.addEventListener("paste", function (event) {
     event.preventDefault();
     const paste = event.clipboardData.getData("text");
@@ -88,20 +113,93 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectionStart = phoneInput.selectionStart;
     const selectionEnd = phoneInput.selectionEnd;
 
-    // Insert cleaned digits
     phoneInput.value =
       currentValue.slice(0, selectionStart) + digitsOnly + currentValue.slice(selectionEnd);
 
-    // Move cursor after pasted content
     const newCursorPos = selectionStart + digitsOnly.length;
     setTimeout(() => {
       phoneInput.setSelectionRange(newCursorPos, newCursorPos);
-      validatePhoneInput(); // Trigger validation after paste
+      validatePhoneInput();
+      validateReservationForm();
     }, 0);
   });
 
-  // Re-validate after change in input
-  phoneInput.addEventListener("input", validatePhoneInput);
+
+  // Date fields validation //
+  let wasEndDateFocused = false;
+
+  endDateInput.addEventListener("focus", function () {
+    wasEndDateFocused = true;
+  });
+
+  // Full date validation with feedback (used only on date inputs)
+  function validateDateInputs() {
+    const startDate = startDateInput.value;
+    const endDate = endDateInput.value;
+
+    startDateInput.classList.remove("is-valid", "is-invalid");
+    endDateInput.classList.remove("is-valid", "is-invalid");
+    dateError.classList.add("d-none");
+    dateError.textContent = "";
+
+    if (!startDate && endDate) {
+      dateError.textContent = "Please fill out both start and end dates.";
+      dateError.classList.remove("d-none");
+      if (!startDate) startDateInput.classList.add("is-invalid");
+      if (!endDate && wasEndDateFocused) endDateInput.classList.add("is-invalid");
+      return false;
+    } else if (startDate && !endDate && wasEndDateFocused) {
+      setInvalid(endDateInput, dateError, "Please fill out both start and end dates.");
+      return false;
+    } else if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      if (end < start) {
+        setInvalid(endDateInput, dateError, "End date must be after or the same as start date.");
+        return false;
+      } else {
+        setValid(endDateInput, dateError);
+        setValid(startDateInput, dateError);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if (startDateInput.value && endDateInput.value) {
+    validateDateInputs();
+  }
+
+  // Enables or disables the Reserve button
+  function validateReservationForm() {
+    const isPhoneValid = validatePhoneInput();
+    const isDateValid = validateDateInputs();
+    const isChecked = checkbox.checked;
+
+    if (isPhoneValid && isDateValid && isChecked) {
+      reserveBtn.classList.remove("disabled");
+    } else {
+      reserveBtn.classList.add("disabled");
+    }
+  }
+
+  // Validate phone input only on blur
+  phoneInput.addEventListener("blur", function () {
+    validatePhoneInput();
+    validateReservationForm();
+  });
+
+  // Validate dates inputs
+  startDateInput.addEventListener("input", function () {
+    validateDateInputs();
+    validateReservationForm();
+  });
+
+  endDateInput.addEventListener("input", function () {
+    validateDateInputs();
+    validateReservationForm();
+  });
+
+  // Checkbox change
+  checkbox.addEventListener("change", validateReservationForm);
 });
-
-

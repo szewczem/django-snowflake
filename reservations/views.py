@@ -37,11 +37,18 @@ class EquipmentListView(ListView):
     def is_valid_dates(self):
         start_date_form = self.request.GET.get('start_date')
         end_date_form = self.request.GET.get('end_date')
+        today = dateformat.format(timezone.now().date(), 'Y-m-d')
+
+        if (start_date_form and start_date_form < today):
+            start_date_form = today
+
+        if (end_date_form and end_date_form < today):
+            end_date_form = today
         
         if start_date_form and not end_date_form: 
             end_date_form = start_date_form
         elif not start_date_form and end_date_form:
-            start_date_form = dateformat.format(timezone.now().date(), 'Y-m-d')
+            start_date_form = today
         elif start_date_form and end_date_form and start_date_form > end_date_form:    
             start_date_form, end_date_form = end_date_form, start_date_form
 
@@ -81,7 +88,7 @@ class EquipmentListView(ListView):
         
         category = Category.objects.values_list('name', flat=True)
         level = Equipment.objects.values_list('level', flat=True).distinct()
-        start_date_form, end_date_form = self.is_valid_dates()
+        start_date_form, end_date_form = self.is_valid_dates()        
         
         page_obj = context['page_obj']
         paginator_limit = 3
