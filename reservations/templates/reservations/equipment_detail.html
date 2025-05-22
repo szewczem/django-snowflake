@@ -59,16 +59,6 @@
                             </form>
                             {% else %}
                             <form method="POST" action="." class="detail-form-container">
-                                {% comment %} <div class="row g-3">
-                                    <div class="form-group col-md-6">
-                                        <label class="label" for="startDate">Start date</label>
-                                        <input type="date" class="form-control" id="detail-start-date" name="start_date" value="{{ start_date }}" disabled>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="label" for="endDate">End date</label>
-                                        <input type="date" class="form-control" id="detail-end-date" name="end_date" value="{{ end_date }}" disabled>
-                                    </div>
-                                </div> {% endcomment %}
                                 <div class="row g-3">
                                     <div class="d-grid gap-2 col-12" tabindex="0" data-bs-toggle="tooltip" data-bs-title="Login to make reservation">
                                         <button type="button" class="btn btn-warning btn-block reserve-btn" disabled>Reserve</button>
